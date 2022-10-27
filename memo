@@ -38,3 +38,48 @@ rules :
 - import할 때 변수 중복 문제 피하기
     - 경로 뒤에 as 작명 한 뒤 변수명에 작명.변수명으로 중복 피할 수 있음
     - 변수를 다른파일에서 쓰기 싫으면 _변수명 _함수명 _클래스명
+
+* tab 기능 만들기
+- 동적인 UI만드는 법
+    1. state에 tab의 현재상태 저장
+    2. state에 따라 tab이 어떻게 보일지 작성
+    3. 유저가 쉽게 state 조작할 수 있게 만들기
+- onTap(){} : onPressed 랑 같은 기능 함
+- pageView() : 슬라이드 되는 UI 기능들을 적용할 수 있음
+
+* 서버에서 데이터가져오는 법
+- 서버에서 GET요청하면 됨
+- 서버란 ? 데이터 달라고 요청하면 주는 프로그램
+- method는 GET/ POST 택 1
+    - GET : 데이터를 읽고 싶을 때 / POST : 데이터를 보내고 싶을 때
+- GET요청하고 싶으면 패키지 설치 필요
+     - dependencies:
+      flutter:
+        sdk: flutter
+      http: ^0.13.4
+
+    - 인터넷 사용 허락
+    경로 : android/app/src/main/AndroidManifest.xml
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    - 마지막으로 import
+    import 'package:http/http.dart' as http;
+    import 'dart:convert';
+
+    - get 요청 코드
+    http.get(Uri.parse('url'));
+    - Dio라는 패키지 설치하면 GET요청 이런게 더 짧아짐
+
+
+* init state : MyApp위젯이 로드될 때 실행됨
+
+* JSON -> LIST, Map 자료형으로 변환
+    - jsonDeconde
+
+* Map 자료형 : 여러 자료를 한 변수에 저장하고 싶으면 사용 , 자료의 이름을 붙혀서 만들어야 됨
+    - {'이름1': 자료1, '이름2': 자료2 ...}
+    - Map에서 자료 꺼내려면 map['이름1']
+    - Map안에 문자뿐만 아니라 아무거나 다 넣을 수 있음
+
+
+
