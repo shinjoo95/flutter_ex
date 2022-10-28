@@ -81,5 +81,22 @@ rules :
     - Map에서 자료 꺼내려면 map['이름1']
     - Map안에 문자뿐만 아니라 아무거나 다 넣을 수 있음
 
+* 스크롤관련 유용한 함수들 사용
+- import 'package:flutter/rendering.dart';
+- 스크롤바 높이 측정하려면
+    -  우선 ListView 담은 곳이 StatefulWidget 이어야 됨
+-  controller: scroll
+    - 얼마나 스크롤했는지 정보들이 scroll 변수에 저장됨
+- 스크롤바 높이 측정하려면
+  var scroll = ScrollController();
+  @override
+  void initState() {
+    super.initState();
+    scroll.addListener(() {         //왼쪽에 있는 변수가 변할 때마다 코드 실행해줌
+        print(scroll.position.pixels);  //위에서 부터 얼마나 스크롤 했는 지 보여줌
+       // scroll.position.maxScrollExtent : 최대 스크롤 거리
+    });
+  }
+
 
 

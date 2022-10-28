@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import './style.dart' as style;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
+import 'package:flutter/rendering.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -22,6 +23,12 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   var tab = 0;
   var data = [];
+
+  addData(a){
+    setState(() {
+      data.add(a);
+    });
+  }
 
   getData() async{
     var result = await http.get(Uri.parse('https://codingapple1.github.io/app/data.json'));
@@ -47,7 +54,7 @@ class _MyAppState extends State<MyApp> {
         actionsIconTheme: IconThemeData(color: Colors.black38, size: 30.0),
       ),
       body:
-        [Home(data : data), Text('샵')][tab],
+        [Home(data : data, addData : addData), Text('샵')][tab],
 
       bottomNavigationBar: BottomNavigationBar(
         showSelectedLabels: false,
@@ -73,14 +80,39 @@ class _MyAppState extends State<MyApp> {
 }
 
 //home 페이지
-class Home extends StatelessWidget {
-  const Home({Key? key, this.data}) : super(key: key);
+class Home extends StatefulWidget {
+  const Home({Key? key, this.data, this.addData}) : super(key: key);
   final data;
+  final addData;
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+
+  var scroll = ScrollController();
+
+  getMore() async {
+    var result = await http.get(Uri.parse('https://codingapple1.github.io/app/more1.json'));
+    var result2 = jsonDecode(result.body);
+    widget.addData(result2);
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    scroll.addListener(() {
+      if (scroll.position.pixels == scroll.position.maxScrollExtent){
+        getMore();
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
-    if(data != null){
-      return ListView.builder(itemCount: 3, itemBuilder: (c,i){
+    if(widget.data != null){
+      return ListView.builder(itemCount: widget.data.length, controller: scroll, itemBuilder: (c,i){
         return Column(
           children: [
             Container(
@@ -90,11 +122,11 @@ class Home extends StatelessWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.network(data[i]['image']),
-                  Text('좋아요${data[i]['likes']}'),
-                  Text(data[i]['user']),
-                  Text(data[i]['content']),
-                  Text(data[i]['date']),
+                  Image.network(widget.data[i]['image']),
+                  Text('좋아요${widget.data[i]['likes']}'),
+                  Text(widget.data[i]['user']),
+                  Text(widget.data[i]['content']),
+                  Text(widget.data[i]['date']),
                 ],
               ),
             )
@@ -106,5 +138,5 @@ class Home extends StatelessWidget {
       return Text('로딩중임');
     }
     }
-  }
+}
 
