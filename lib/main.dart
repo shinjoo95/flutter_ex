@@ -47,7 +47,11 @@ class _MyAppState extends State<MyApp> {
       appBar: AppBar(
         title: Text('Instagram'),
         actions: [
-          IconButton(icon: Icon(Icons.add_box_outlined, color: Colors.black), onPressed: null,),
+          IconButton(icon: Icon(Icons.add_box_outlined, color: Colors.black),
+            onPressed: (){
+              Navigator.push(context, 
+                MaterialPageRoute(builder: (c) => Upload()));
+          },),
           IconButton(icon: Icon(Icons.favorite_border, color: Colors.black), onPressed: null),
           IconButton(icon: Icon(Icons.send, color: Colors.black ), onPressed: null)
         ],
@@ -88,7 +92,6 @@ class Home extends StatefulWidget {
   @override
   State<Home> createState() => _HomeState();
 }
-
 class _HomeState extends State<Home> {
 
   var scroll = ScrollController();
@@ -140,3 +143,21 @@ class _HomeState extends State<Home> {
     }
 }
 
+class Upload extends StatelessWidget {
+  const Upload({Key? key}) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text('이미지업로드화면'),
+          IconButton(onPressed: (){
+            Navigator.pop(context);
+          }, icon: Icon(Icons.close),)
+        ],
+      ),
+    );
+  }
+}

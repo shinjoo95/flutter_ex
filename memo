@@ -98,5 +98,24 @@ rules :
     });
   }
 
+* Navigator
+- 새로운 페이지로 덮기
+- Navigator.push(context, route)
+    - context : MaterialApp들어있는 context 넣어야함
+            onPressed: (){
+              Navigator.push(context,
+                MaterialPageRoute(builder: (c){return Text('새페이지');}));
+          },),
+          - 중괄호랑 return 키워드 1개씩이면 생략 가능 arrowfunction
+            - MaterialPageRoute(builder: (c) => Text('새페이지'))
 
-
+* routes
+- 페이지가 많으면 routes 사용하는 것이 좋음
+- 페이지 많고 복잡한 앱에 좋음
+- initialRoute: '/',                    //앱 로드 시 어떤 routes 보여줄 지
+  routes : {
+    '/' : (c) => Text('첫페이지'),        //  / 접속 시 보여줄 페이지
+    '/detail' : (c) => Text('둘째페이지')
+  }
+    - Navigator.pushNamed(context, '/detail');
+        - (/detail 페이지로 이동함)
