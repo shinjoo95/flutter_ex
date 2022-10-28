@@ -3,6 +3,8 @@ import './style.dart' as style;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
 import 'package:flutter/rendering.dart';
+import 'package:image_picker/image_picker.dart';
+import 'dart:io';
 
 void main() {
   runApp(MaterialApp(
@@ -23,6 +25,29 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   var tab = 0;
   var data = [];
+  var userImage ;
+  var userContent;
+
+  addMyData(){
+    var myData ={
+        "id": data.length,
+        "image": userImage,
+        "likes": 150,
+        "date": "Oct 28",
+        "content": "신주봉",
+        "liked": false,
+        "user": "Joo Bong"
+      };
+    setState(() {
+      data.insert(0, myData); //List 맨앞에 자료 추가하는 법
+    });
+  }
+
+  setUserContent(a){
+    setState(() {
+      userContent = a;
+     });
+  }
 
   addData(a){
     setState(() {
@@ -48,9 +73,18 @@ class _MyAppState extends State<MyApp> {
         title: Text('Instagram'),
         actions: [
           IconButton(icon: Icon(Icons.add_box_outlined, color: Colors.black),
-            onPressed: (){
-              Navigator.push(context, 
-                MaterialPageRoute(builder: (c) => Upload()));
+            onPressed: () async{
+              var picker = ImagePicker();
+              var image = await picker.pickImage(source: ImageSource.gallery);
+              if(image != null){
+                setState(() {
+                  userImage = File(image.path);     //image가 null 일 가능 성이 있어서 if문으로
+                });
+              }
+              // ignore: use_build_context_synchronously
+              Navigator.push(context,
+                MaterialPageRoute(builder: (c) => Upload(
+                    userImage : userImage, setUserContent : setUserContent,  addMyData: addMyData)));
           },),
           IconButton(icon: Icon(Icons.favorite_border, color: Colors.black), onPressed: null),
           IconButton(icon: Icon(Icons.send, color: Colors.black ), onPressed: null)
@@ -125,7 +159,9 @@ class _HomeState extends State<Home> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Image.network(widget.data[i]['image']),
+                  widget.data[i]['image'].runtimeType == String
+                  ?Image.network(widget.data[i]['image'])
+                  :Image.file(widget.data[i]['image']),
                   Text('좋아요${widget.data[i]['likes']}'),
                   Text(widget.data[i]['user']),
                   Text(widget.data[i]['content']),
@@ -144,15 +180,28 @@ class _HomeState extends State<Home> {
 }
 
 class Upload extends StatelessWidget {
-  const Upload({Key? key}) : super(key: key);
+  const Upload({Key? key, this.userImage, this.setUserContent, this.addMyData}) : super(key: key);
+  final userImage;
+  final setUserContent;
+  final addMyData;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
+      resizeToAvoidBottomInset: false,
+      appBar: AppBar(actions: [
+        IconButton(onPressed: (){
+          addMyData();
+        }, icon: Icon(Icons.send), color: Colors.black,)
+      ],),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          Image.file(userImage),
           Text('이미지업로드화면'),
+          TextField(onChanged: (text){
+            setUserContent(text);
+          },),
           IconButton(onPressed: (){
             Navigator.pop(context);
           }, icon: Icon(Icons.close),)

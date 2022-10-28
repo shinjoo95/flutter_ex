@@ -119,3 +119,19 @@ rules :
   }
     - Navigator.pushNamed(context, '/detail');
         - (/detail 페이지로 이동함)
+
+* 핸드폰 이미지를 넣고 싶을 때
+- image_picker 설치
+- ios/runner/info.plist
+<key>NSPhotoLibraryUsageDescription</key>
+<string>사진첩좀 써도 됩니까</string>
+<key>NSCameraUsageDescription</key>
+<string>카메라좀 써도 됩니까</string>
+<key>NSMicrophoneUsageDescription</key>
+<string>마이크 권한좀 제발</string>
+- dart 파일에 import 추가
+    - import 'package:image_picker/image_picker.dart';
+      import 'dart:io';
+-           onPressed: () async{
+                var picker = ImagePicker();
+                var image = await picker.pickImage(source: ImageSource.gallery);    //gallery, camera, video
