@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
+import 'package:shared_preferences/shared_preferences.dart';
 
 void main() {
   runApp(MaterialApp(
@@ -27,6 +28,15 @@ class _MyAppState extends State<MyApp> {
   var data = [];
   var userImage ;
   var userContent;
+
+  //데이터 저장 함수
+  saveData() async{
+    var storage = await SharedPreferences.getInstance();
+    storage.setString('name', 'shin');
+    var result = storage.get('name');
+    storage.remove('name');   //삭제
+    print(result);
+  }
 
   addMyData(){
     var myData ={
@@ -64,6 +74,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     getData();
+    saveData();
   }
 
   @override

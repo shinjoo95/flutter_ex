@@ -135,3 +135,21 @@ rules :
 -           onPressed: () async{
                 var picker = ImagePicker();
                 var image = await picker.pickImage(source: ImageSource.gallery);    //gallery, camera, video
+
+* 데이터 보관
+1. 서버로 보내서 DB에 저장
+2. 폰 메모리카드에 저장(반영구적 보관) - shared preferences 이용(이미지는 저장 불가)
+    - shared_preferences 설치
+        import 'package:shared_preferences/shared_preferences.dart';
+          shared_preferences: ^2.0.11
+
+            saveData() async{
+              var storage = await SharedPreferences.getInstance();
+              storage.setString('이름', '데이터');
+            }
+     - Map 자료 저장하려면 JSON으로 바꿔서 저장해야됨
+         - var map = {'age' : 20};
+            storage.setString('map', jsonEncode(map));
+            var result = storage.get('map');
+            print(jsonDecode(result));          //JSON -> Map 변환
+
