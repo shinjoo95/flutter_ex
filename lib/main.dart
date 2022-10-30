@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import './style.dart' as style;
 import 'package:http/http.dart' as http;
@@ -173,8 +174,23 @@ class _HomeState extends State<Home> {
                   widget.data[i]['image'].runtimeType == String
                   ?Image.network(widget.data[i]['image'])
                   :Image.file(widget.data[i]['image']),
+
+                  GestureDetector(child: Text(widget.data[i]['user']),
+                      onTap: (){
+                        Navigator.push(context,
+                        PageRouteBuilder(pageBuilder : (c, a1, a2) => Profile(),
+                        transitionsBuilder: (c, a1, a2, child) =>
+                          SlideTransition(position: Tween(
+                            begin: Offset(1.0, 0.0),
+                            end: Offset(0.0, 0.0),
+                          ).animate(a1),
+                            child: child,
+                          )
+                        )
+                        );
+                      },
+                  ),
                   Text('좋아요${widget.data[i]['likes']}'),
-                  Text(widget.data[i]['user']),
                   Text(widget.data[i]['content']),
                   Text(widget.data[i]['date']),
                 ],
@@ -218,6 +234,19 @@ class Upload extends StatelessWidget {
           }, icon: Icon(Icons.close),)
         ],
       ),
+    );
+  }
+}
+
+class Profile extends StatelessWidget {
+  const Profile({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(),
+      body: Text('프로필페이지'),
+
     );
   }
 }
