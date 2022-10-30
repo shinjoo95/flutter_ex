@@ -219,6 +219,16 @@ rules :
               ChangeNotifierProvider(create: (c) => Store2() ),
             ],
 
+* 그리드(Grid) 격자구조 만들기
+- GridView(),
+
+* 스크롤바를 생성해주는 CustomScrollView()
+- sliver(조각) : 안에
+    - 격자 넣고 싶으면 SliverGrid()
+    - ListView 넣고 싶으면 SliverList()
+    - 박스 넣고 싶으면 SliverToBoxAdapter()
+    - 이쁜 헤더는 SliverAppBar()
+
 
 
 
