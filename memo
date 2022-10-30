@@ -187,3 +187,43 @@ rules :
                       },
                   ),
 - 페이지 전환시 쓰는 Hero()이런 것도 있음
+
+* state 보관함 Provider 이용 (모든 위젯이 사용 가능)
+- import 'package:provider/provider.dart';
+      provider: ^6.0.1
+1. state 보관함 (store) 만들기
+2. store 원하는 위젯에 등록하기
+    - 이 state 쓰고 싶은 위젯들을 전부 ChangeNotifierProvide()로 감싸야함
+    void main() {
+      runApp(ChangeNotifierProvider(
+        create: (c) => Store1(),
+        child: MaterialApp()}
+    - 이제 MaterialApp() 자식 위젯들은 전부 Store1에 있던 state 사용가능함
+3. store에 있던 state 사용은
+    - appBar: AppBar(title: Text(context.watch<Store1>().name)
+4. store 에 있는 state 변경은 ?
+    1. state는 변경함수 만들기
+    2.   changeName(){
+           name = 'jooBong';
+           notifyListeners();           //setState 역할을 해줌 -> 재렌더링
+         }
+    3.           ElevatedButton(onPressed: (){
+                   context.read<Store1>().changeName();
+                 }, child: Text('버튼'))
+- store 만들고 -> store 쓸 위젯들 등록 -> store에 있던 거 쓸 때는 context.watch<Store이름>()
+- store 여러개 가능
+    - void main() {
+        runApp(MultiProvider(
+            providers:[
+              ChangeNotifierProvider(create: (c) => Store1() ),
+              ChangeNotifierProvider(create: (c) => Store2() ),
+            ],
+
+
+
+
+
+
+
+
+

@@ -7,14 +7,18 @@ import 'package:flutter/rendering.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:io';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:provider/provider.dart';
 
 void main() {
-  runApp(MaterialApp(
-      theme: style.theme,
-      home: MyApp()
-    )
-  );
+  runApp(MultiProvider(
+    providers: [
+      ChangeNotifierProvider(create: (c) => Store1()),
+      ChangeNotifierProvider(create: (c) => Store2()),
+    ],
+    child: MaterialApp(theme: style.theme, home: MyApp()),
+  ));
 }
+
 var a = TextStyle();
 
 class MyApp extends StatefulWidget {
@@ -27,50 +31,52 @@ class MyApp extends StatefulWidget {
 class _MyAppState extends State<MyApp> {
   var tab = 0;
   var data = [];
-  var userImage ;
+  var userImage;
   var userContent;
 
   //데이터 저장 함수
-  saveData() async{
+  saveData() async {
     var storage = await SharedPreferences.getInstance();
     storage.setString('name', 'shin');
     var result = storage.get('name');
-    storage.remove('name');   //삭제
+    storage.remove('name'); //삭제
     print(result);
   }
 
-  addMyData(){
-    var myData ={
-        "id": data.length,
-        "image": userImage,
-        "likes": 150,
-        "date": "Oct 28",
-        "content": "신주봉",
-        "liked": false,
-        "user": "Joo Bong"
-      };
+  addMyData() {
+    var myData = {
+      "id": data.length,
+      "image": userImage,
+      "likes": 150,
+      "date": "Oct 28",
+      "content": "신주봉",
+      "liked": false,
+      "user": "Joo Bong"
+    };
     setState(() {
       data.insert(0, myData); //List 맨앞에 자료 추가하는 법
     });
   }
 
-  setUserContent(a){
+  setUserContent(a) {
     setState(() {
       userContent = a;
-     });
+    });
   }
 
-  addData(a){
+  addData(a) {
     setState(() {
       data.add(a);
     });
   }
 
-  getData() async{
-    var result = await http.get(Uri.parse('https://codingapple1.github.io/app/data.json'));
+  getData() async {
+    var result = await http
+        .get(Uri.parse('https://codingapple1.github.io/app/data.json'));
     var result2 = jsonDecode(result.body);
     data = result2;
   }
+
   @override
   void initState() {
     super.initState();
@@ -84,32 +90,39 @@ class _MyAppState extends State<MyApp> {
       appBar: AppBar(
         title: Text('Instagram'),
         actions: [
-          IconButton(icon: Icon(Icons.add_box_outlined, color: Colors.black),
-            onPressed: () async{
+          IconButton(
+            icon: Icon(Icons.add_box_outlined, color: Colors.black),
+            onPressed: () async {
               var picker = ImagePicker();
               var image = await picker.pickImage(source: ImageSource.gallery);
-              if(image != null){
+              if (image != null) {
                 setState(() {
-                  userImage = File(image.path);     //image가 null 일 가능 성이 있어서 if문으로
+                  userImage = File(image.path); //image가 null 일 가능 성이 있어서 if문으로
                 });
               }
               // ignore: use_build_context_synchronously
-              Navigator.push(context,
-                MaterialPageRoute(builder: (c) => Upload(
-                    userImage : userImage, setUserContent : setUserContent,  addMyData: addMyData)));
-          },),
-          IconButton(icon: Icon(Icons.favorite_border, color: Colors.black), onPressed: null),
-          IconButton(icon: Icon(Icons.send, color: Colors.black ), onPressed: null)
+              Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (c) => Upload(
+                          userImage: userImage,
+                          setUserContent: setUserContent,
+                          addMyData: addMyData)));
+            },
+          ),
+          IconButton(
+              icon: Icon(Icons.favorite_border, color: Colors.black),
+              onPressed: null),
+          IconButton(
+              icon: Icon(Icons.send, color: Colors.black), onPressed: null)
         ],
         actionsIconTheme: IconThemeData(color: Colors.black38, size: 30.0),
       ),
-      body:
-        [Home(data : data, addData : addData), Text('샵')][tab],
-
+      body: [Home(data: data, addData: addData), Text('샵')][tab],
       bottomNavigationBar: BottomNavigationBar(
         showSelectedLabels: false,
         showUnselectedLabels: false,
-        onTap: (i){
+        onTap: (i) {
           setState(() {
             tab = i;
           });
@@ -122,7 +135,7 @@ class _MyAppState extends State<MyApp> {
           BottomNavigationBarItem(
             label: 'shop',
             icon: Icon(Icons.shopping_bag_outlined),
-            )
+          )
         ],
       ),
     );
@@ -138,12 +151,13 @@ class Home extends StatefulWidget {
   @override
   State<Home> createState() => _HomeState();
 }
-class _HomeState extends State<Home> {
 
+class _HomeState extends State<Home> {
   var scroll = ScrollController();
 
   getMore() async {
-    var result = await http.get(Uri.parse('https://codingapple1.github.io/app/more1.json'));
+    var result = await http
+        .get(Uri.parse('https://codingapple1.github.io/app/more1.json'));
     var result2 = jsonDecode(result.body);
     widget.addData(result2);
   }
@@ -152,7 +166,7 @@ class _HomeState extends State<Home> {
   void initState() {
     super.initState();
     scroll.addListener(() {
-      if (scroll.position.pixels == scroll.position.maxScrollExtent){
+      if (scroll.position.pixels == scroll.position.maxScrollExtent) {
         getMore();
       }
     });
@@ -160,54 +174,58 @@ class _HomeState extends State<Home> {
 
   @override
   Widget build(BuildContext context) {
-    if(widget.data != null){
-      return ListView.builder(itemCount: widget.data.length, controller: scroll, itemBuilder: (c,i){
-        return Column(
-          children: [
-            Container(
-              constraints: BoxConstraints(maxWidth: 600),
-              padding: EdgeInsets.all(5),
-              width: double.infinity,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  widget.data[i]['image'].runtimeType == String
-                  ?Image.network(widget.data[i]['image'])
-                  :Image.file(widget.data[i]['image']),
-
-                  GestureDetector(child: Text(widget.data[i]['user']),
-                      onTap: (){
-                        Navigator.push(context,
-                        PageRouteBuilder(pageBuilder : (c, a1, a2) => Profile(),
-                        transitionsBuilder: (c, a1, a2, child) =>
-                          SlideTransition(position: Tween(
-                            begin: Offset(1.0, 0.0),
-                            end: Offset(0.0, 0.0),
-                          ).animate(a1),
-                            child: child,
-                          )
-                        )
-                        );
-                      },
+    if (widget.data != null) {
+      return ListView.builder(
+          itemCount: widget.data.length,
+          controller: scroll,
+          itemBuilder: (c, i) {
+            return Column(
+              children: [
+                Container(
+                  constraints: BoxConstraints(maxWidth: 600),
+                  padding: EdgeInsets.all(5),
+                  width: double.infinity,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      widget.data[i]['image'].runtimeType == String
+                          ? Image.network(widget.data[i]['image'])
+                          : Image.file(widget.data[i]['image']),
+                      GestureDetector(
+                        child: Text(widget.data[i]['user']),
+                        onTap: () {
+                          Navigator.push(
+                              context,
+                              PageRouteBuilder(
+                                  pageBuilder: (c, a1, a2) => Profile(),
+                                  transitionsBuilder: (c, a1, a2, child) =>
+                                      SlideTransition(
+                                        position: Tween(
+                                          begin: Offset(1.0, 0.0),
+                                          end: Offset(0.0, 0.0),
+                                        ).animate(a1),
+                                        child: child,
+                                      )));
+                        },
+                      ),
+                      Text('좋아요${widget.data[i]['likes']}'),
+                      Text(widget.data[i]['content']),
+                      Text(widget.data[i]['date']),
+                    ],
                   ),
-                  Text('좋아요${widget.data[i]['likes']}'),
-                  Text(widget.data[i]['content']),
-                  Text(widget.data[i]['date']),
-                ],
-              ),
-            )
-          ],
-
-        );
-      });
-    }else {
+                )
+              ],
+            );
+          });
+    } else {
       return Text('로딩중임');
     }
-    }
+  }
 }
 
 class Upload extends StatelessWidget {
-  const Upload({Key? key, this.userImage, this.setUserContent, this.addMyData}) : super(key: key);
+  const Upload({Key? key, this.userImage, this.setUserContent, this.addMyData})
+      : super(key: key);
   final userImage;
   final setUserContent;
   final addMyData;
@@ -216,26 +234,73 @@ class Upload extends StatelessWidget {
   Widget build(BuildContext context) {
     return Scaffold(
       resizeToAvoidBottomInset: false,
-      appBar: AppBar(actions: [
-        IconButton(onPressed: (){
-          addMyData();
-        }, icon: Icon(Icons.send), color: Colors.black,)
-      ],),
+      appBar: AppBar(
+        actions: [
+          IconButton(
+            onPressed: () {
+              addMyData();
+            },
+            icon: Icon(Icons.send),
+            color: Colors.black,
+          )
+        ],
+      ),
       body: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Image.file(userImage),
           Text('이미지업로드화면'),
-          TextField(onChanged: (text){
-            setUserContent(text);
-          },),
-          IconButton(onPressed: (){
-            Navigator.pop(context);
-          }, icon: Icon(Icons.close),)
+          TextField(
+            onChanged: (text) {
+              setUserContent(text);
+            },
+          ),
+          IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: Icon(Icons.close),
+          )
         ],
       ),
     );
   }
+}
+
+class Store1 extends ChangeNotifier {
+  var follower = 350;
+  var friend = false;
+  var follow = '팔로우';
+  var profileImage = [];
+  getData() async {
+    var result = await http
+        .get(Uri.parse('https://codingapple1.github.io/app/profile.json'));
+    var result2 = jsonDecode(result.body);
+    profileImage = result2;
+    notifyListeners();
+  }
+
+  // var name = 'shinjoo';
+  // changeName() {
+  //   name = 'jooBong';
+  //   notifyListeners();
+  // }
+  addFollower() {
+    if (friend == false) {
+      follower++;
+      follow = '팔로우 취소';
+      friend = true;
+    } else {
+      follower--;
+      follow = '팔로우';
+      friend = false;
+    }
+    notifyListeners();
+  }
+}
+
+class Store2 extends ChangeNotifier {
+  var name = 'joobong';
 }
 
 class Profile extends StatelessWidget {
@@ -244,9 +309,33 @@ class Profile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(),
-      body: Text('프로필페이지'),
-
-    );
+        appBar: AppBar(
+          title: Text(context.watch<Store2>().name),
+        ),
+        body: Container(
+          margin: EdgeInsets.only(
+            top: 20,
+            right: 10,
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceAround,
+            children: [
+              CircleAvatar(
+                //동그란 이미지
+                radius: 30,
+                backgroundImage: AssetImage('images/main2.jpeg'),
+              ),
+              Text('팔로워 ${context.watch<Store1>().follower}명'),
+              ElevatedButton(
+                  onPressed: () {
+                    context.read<Store1>().addFollower();
+                  },
+                  child: Text(context.watch<Store1>().follow)),
+              ElevatedButton(onPressed: (){
+                  context.read<Store1>().getData();
+              }, child: Text('사진가져오기'))
+            ],
+          ),
+        ));
   }
 }
