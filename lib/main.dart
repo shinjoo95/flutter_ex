@@ -34,6 +34,8 @@ class _MyAppState extends State<MyApp> {
   var userImage;
   var userContent;
 
+
+
   //데이터 저장 함수
   saveData() async {
     var storage = await SharedPreferences.getInstance();
@@ -77,11 +79,12 @@ class _MyAppState extends State<MyApp> {
     data = result2;
   }
 
+
   @override
   void initState() {
     super.initState();
     getData();
-    saveData();
+    context.read<Store1>().getData();
   }
 
   @override
@@ -191,26 +194,34 @@ class _HomeState extends State<Home> {
                       widget.data[i]['image'].runtimeType == String
                           ? Image.network(widget.data[i]['image'])
                           : Image.file(widget.data[i]['image']),
-                      GestureDetector(
-                        child: Text(widget.data[i]['user']),
-                        onTap: () {
-                          Navigator.push(
-                              context,
-                              PageRouteBuilder(
-                                  pageBuilder: (c, a1, a2) => Profile(),
-                                  transitionsBuilder: (c, a1, a2, child) =>
-                                      SlideTransition(
-                                        position: Tween(
-                                          begin: Offset(1.0, 0.0),
-                                          end: Offset(0.0, 0.0),
-                                        ).animate(a1),
-                                        child: child,
-                                      )));
-                        },
+                      Padding(
+                        padding: const EdgeInsets.only(top: 5, bottom: 5),
+                        child: GestureDetector(
+                          child: Text(
+                            widget.data[i]['user'],
+                            style: TextStyle(
+                                fontWeight: FontWeight.w600, fontSize: 20),
+                          ),
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                PageRouteBuilder(
+                                    pageBuilder: (c, a1, a2) => Profile(),
+                                    transitionsBuilder: (c, a1, a2, child) =>
+                                        SlideTransition(
+                                          position: Tween(
+                                            begin: Offset(1.0, 0.0),
+                                            end: Offset(0.0, 0.0),
+                                          ).animate(a1),
+                                          child: child,
+                                        )));
+                          },
+                        ),
                       ),
                       Text('좋아요${widget.data[i]['likes']}'),
                       Text(widget.data[i]['content']),
-                      Text(widget.data[i]['date']),
+                      Text(widget.data[i]['date'],
+                          style: TextStyle(fontSize: 10)),
                     ],
                   ),
                 )
@@ -272,13 +283,15 @@ class Store1 extends ChangeNotifier {
   var friend = false;
   var follow = '팔로우';
   var profileImage = [];
+
   getData() async {
-    var result = await http
-        .get(Uri.parse('https://codingapple1.github.io/app/profile.json'));
+    var result = await http.get(Uri.parse('https://codingapple1.github.io/app/profile.json'));
     var result2 = jsonDecode(result.body);
     profileImage = result2;
     notifyListeners();
+
   }
+
 
   // var name = 'shinjoo';
   // changeName() {
@@ -299,34 +312,47 @@ class Store1 extends ChangeNotifier {
   }
 }
 
+
+
 class Store2 extends ChangeNotifier {
   var name = 'joobong';
 }
 
-class Profile extends StatelessWidget {
-  const Profile({Key? key}) : super(key: key);
+
+class Profile extends StatefulWidget {
+  const Profile({Key? key,}) : super(key: key);
+
+
+  @override
+  State<Profile> createState() => _ProfileState();
+}
+class _ProfileState extends State<Profile> {
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
         appBar: AppBar(
-            title: Text('shinjoo'),
+          iconTheme: IconThemeData(
+            color: Colors.black,
+          ),
+          title: Text(context.watch<Store2>().name),
         ),
         body: CustomScrollView(
           slivers: <Widget>[
             SliverAppBar(
-              centerTitle: true,
+              automaticallyImplyLeading: false,
               flexibleSpace: ProfileHeader(),
-              expandedHeight: 75,
+              expandedHeight: 100,
             ),
             SliverGrid(
                 delegate: SliverChildBuilderDelegate(
-                    (c,i)=> Image.network(context.watch<Store1>().profileImage[i]),
-                  childCount: context.watch<Store1>().profileImage.length
+                  (c,i) =>
+                      Image.network(context.watch<Store1>().profileImage[i]),
+                  childCount: context.watch<Store1>().profileImage.length,
                 ),
-                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+                gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 2)
             ),
-
           ],
         )
     );
@@ -338,23 +364,24 @@ class ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-
-      mainAxisAlignment: MainAxisAlignment.spaceAround,
-      children: [
-        CircleAvatar(
-          //동그란 이미지
-          radius: 30,
-          backgroundImage: AssetImage('images/main2.jpeg'),
-        ),
-        Text('팔로워 ${context.watch<Store1>().follower}명'),
-        ElevatedButton(
-            onPressed: () {
-              context.read<Store1>().addFollower();
-            },
-            child: Text(context.watch<Store1>().follow)),
-
-      ],
+    return Container(
+      margin: EdgeInsets.only(top: 20),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceAround,
+        children: [
+          CircleAvatar(
+            //동그란 이미지
+            radius: 30,
+            backgroundImage: AssetImage('images/main2.jpeg'),
+          ),
+          Text('팔로워  ${context.watch<Store1>().follower}명', style: TextStyle(fontWeight: FontWeight.w500, fontSize: 17)),
+          ElevatedButton(
+              onPressed: () {
+                context.read<Store1>().addFollower();
+              },
+              child: Text(context.watch<Store1>().follow)),
+        ],
+      ),
     );
   }
 }
