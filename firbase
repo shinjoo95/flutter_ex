@@ -37,3 +37,23 @@ android/app/build.gradle 수정
         // You can update the following values to match your application needs.
         // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
         minSdkVersion 21    <---- 변경
+
+
+firebase 안에 database 2개가 있음
+- Realtime Database
+- Cloude Firestore
+    - SQL 안씀 , Map{} 자료형 그대로 저장 가능
+    - collection / document 개념
+    - collection : 폴더
+- import 'package:cloud_firestore/cloud_firestore.dart';
+-     getData() async{
+      await firestore.collection('product').doc(
+          'IzYiB5BlRJrGOkYKZfCU').get();
+      }
+- permission 에러
+    - 규칙 -->  allow read, write: if true;
+- 데이터 저장은 .add({'name' : '신발' ,'price' : 130000});
+- 데이터를 조건부초 가져오려면 .where()
+    - 가격이 70000원 이하인것만 가져와라, 날짜가 12일 이후만 가져와라
+- 데이터를 삭제하려면 doc.delete()
+- 데이터 수정 doc().update()

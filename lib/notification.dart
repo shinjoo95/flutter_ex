@@ -82,9 +82,9 @@ showNotification2() async {
 
   notifications.zonedSchedule(        //매일, 매시간, 매주  반복하고 싶으면 periodcallyShow , RepeatInterval.daily
       2,
-      '제목2',
-      '내용2',
-      tz.TZDateTime.now(tz.local).add(Duration(seconds: 3)),        //현재날짜와 시각.3초후에
+      '채린이',
+      '안녕?',
+      tz.TZDateTime.now(tz.local).add(Duration(seconds: 1)),        //현재날짜와 시각.3초후에
       NotificationDetails(android: androidDetails, iOS: iosDetails),
       androidAllowWhileIdle: true,
       uiLocalNotificationDateInterpretation:

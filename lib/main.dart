@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:instagram/notification.dart';
+import 'package:instagram/shop.dart';
 import './style.dart' as style;
 import 'package:http/http.dart' as http;
 import 'dart:convert';
@@ -94,6 +96,7 @@ class _MyAppState extends State<MyApp> {
   void initState() {
     super.initState();
     initNotification(context);
+    IOSNotificationDetails();
     getData();
     context.read<Store1>().getData();
   }
@@ -135,7 +138,8 @@ class _MyAppState extends State<MyApp> {
         ],
         actionsIconTheme: IconThemeData(color: Colors.black38, size: 30.0),
       ),
-      body: [Home(data: data, addData: addData), Text('샵')][tab],
+      body: [Home(data: data, addData: addData), Shop()][tab],
+
       bottomNavigationBar: BottomNavigationBar(
         showSelectedLabels: false,
         showUnselectedLabels: false,
