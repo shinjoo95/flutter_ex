@@ -230,7 +230,12 @@ rules :
     - 이쁜 헤더는 SliverAppBar()
 
 
-
+* 반응형 웹
+- MediaQuery.of(context).size.width;            //유저 기기의 화면정보 알려줌
+    - 1cm == 38LP
+- .padding.top      //상단 여백
+- .devicePicelRatio //해상도 1LP에 몇 px이 들어가는지
+- .textScaleFactor  //폰트사이즈 얼마나 키우고 쓰는지
 
 
 

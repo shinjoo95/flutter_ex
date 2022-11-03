@@ -106,6 +106,9 @@ class _MyAppState extends State<MyApp> {
 
   @override
   Widget build(BuildContext context) {
+    
+    MediaQuery.of(context).size.width;
+    
     return Scaffold(
       floatingActionButton: FloatingActionButton(child: Text('+'), onPressed: (){
         showNotification2();
@@ -141,8 +144,8 @@ class _MyAppState extends State<MyApp> {
         ],
         actionsIconTheme: IconThemeData(color: Colors.black38, size: 30.0),
       ),
-      body: [Home(data: data, addData: addData), Shop()][tab],
-
+      body: [ Home(data: data, addData: addData), Shop()][tab],
+        //MediaQuery.of(context).size.width >  600 ? HomeLarge() :
       bottomNavigationBar: BottomNavigationBar(
         showSelectedLabels: false,
         showUnselectedLabels: false,
