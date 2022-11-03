@@ -14,17 +14,7 @@ class Shop extends StatefulWidget {
 
 class _ShopState extends State<Shop> {
   getData() async {
-    try {
-      await auth.signInWithEmailAndPassword(
-          email: 'shinjoo@naver.com', password: '123123');
-    } catch (e) {
-      print(e);
-    }
-    if(auth.currentUser?.uid == null) {
-      print('로그인 안된 상태입니다.');
-    }else{
-      print('로그인 된 상태입니다.');
-    }
+    await firestore.collection('product').get();
   }
 
   @override

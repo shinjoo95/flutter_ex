@@ -94,3 +94,27 @@ firebase 안에 database 2개가 있음
     - await auth.signOut();
 - 이메일 인증, 폰 번호 인증 요구 가능 인
 - http://firebase.flutter.dev 참고
+
+Firestore 규칙란에서 데이터 입출력 규칙 설정 가능
+- firebase.google.com/docs/rules/basics 참고
+    -     match 경로 {
+          	조건
+          }
+          - 규칙을 정할 collection / document 경로
+
+   -    match /product/{docid} {        //product안의 모든 문서
+        	allow read : if request.auth != null;        //읽기 규칙 설정할 땐 allow read : if 조건식;  / / 생성규칙 설정 allow create : if 조건식;
+            //로그인 된 사람만 read 가능하게
+        }
+
+    - 로그인 한 사람만 읽기, 게시한 사람만 업데이트 가능, 데이터 validation 기능
+        -rules_version = '2';
+         service cloud.firestore {
+           match /databases/{database}/documents {
+             match /product/{docid} {
+             	allow read : if request.auth != null;
+               allow update : if request.auth.uid == resource.data.who;
+               allow create : if request.resource.data.name.match;
+            		 }
+             }
+           }
