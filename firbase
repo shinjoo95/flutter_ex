@@ -57,3 +57,40 @@ firebase 안에 database 2개가 있음
     - 가격이 70000원 이하인것만 가져와라, 날짜가 12일 이후만 가져와라
 - 데이터를 삭제하려면 doc.delete()
 - 데이터 수정 doc().update()
+
+
+로그인기능 구현하기 authentication
+- Firebase Authentication 셋팅
+    - import 'package:firebase_auth/firebase_auth.dart';
+      final auth = FirebaseAuth.instance;
+
+- 아이디 비번 만들기
+ -  getData() async{
+      try{
+        var result = await auth.createUserWithEmailAndPassword(
+            email: 'shinjoo95@naver.com',
+            password: 'wndydtlswndyd1'
+        );
+        result.user!.updateDisplayName('jooyoung');
+      }catch(e){
+        print(e);   //가입 거절 에러 메시지
+      }
+    }
+- 유저 로그인 기능
+    -    getData() async {
+           try {
+             await auth.signInWithEmailAndPassword(
+                 email: 'shinjoo@naver.com', password: '123123');
+           } catch (e) {
+             print(e);
+           }
+           if(auth.currentUser?.uid == null) {
+             print('로그인 안된 상태입니다.');
+           }else{
+             print('로그인 된 상태입니다.');
+           }
+         }
+- 로그아웃 기능
+    - await auth.signOut();
+- 이메일 인증, 폰 번호 인증 요구 가능 인
+- http://firebase.flutter.dev 참고
