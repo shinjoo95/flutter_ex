@@ -63,7 +63,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Colors.grey,
-        title: Text('Animal List'),
+        title: Text('동물 사전'),
       ),
       body: TabBarView(
         controller: controller,
