@@ -1,17 +1,31 @@
 import 'package:flutter/material.dart';
 import '../animalItem.dart';
 
-class SecondApp extends StatelessWidget {
+class SecondApp extends StatefulWidget {
   final List<Animal>? list;
-  const SecondApp({super.key, this.list});
+  SecondApp({super.key, this.list});
 
+  @override
+  State<SecondApp> createState() => _SecondAppState();
+}
 
+class _SecondAppState extends State<SecondApp> {
+  final nameController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
         child: Center(
-          child: Text('두번째 페이지'),
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget>[
+                TextField(
+                  controller: nameController,
+                  keyboardType: TextInputType.text,
+                  maxLines: 1,
+                )
+            ],
+          )
         ),
       ),
     );
