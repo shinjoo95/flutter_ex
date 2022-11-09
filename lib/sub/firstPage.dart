@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import '../animalItem.dart';
 
 class FirstApp extends StatelessWidget {
-  const FirstApp({super.key});
+  final List<Animal>? list;
+  const FirstApp({super.key, this.list});
 
 
   @override
@@ -9,7 +11,22 @@ class FirstApp extends StatelessWidget {
     return Scaffold(
       body: Container(
         child: Center(
-          child: Text('첫페이지'),
+          child: ListView.builder(itemBuilder: (context, position){
+            return Card(
+              child: Row(
+                children: <Widget>[
+                  Image.asset(
+                    list![position].imagePath!,
+                    height: 100, width: 100,
+                    fit: BoxFit.contain,
+                  ),
+                  Text(list![position].animalName!)
+                ],
+              ),
+            );
+          },
+            itemCount: list!.length,
+          ),
         ),
       ),
     );
