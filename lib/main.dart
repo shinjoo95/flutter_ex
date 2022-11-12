@@ -68,7 +68,7 @@ class _MyHomePageState extends State<MyHomePage> with SingleTickerProviderStateM
       body: TabBarView(
         controller: controller,
         children:
-        <Widget>[FirstApp(list: animalList), SecondApp()],
+        <Widget>[FirstApp(list: animalList), SecondApp(list: animalList,)],
       ),
       bottomNavigationBar: TabBar(tabs: <Tab>[
         Tab(icon: Icon(Icons.looks_one, color: Colors.grey,),),

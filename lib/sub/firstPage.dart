@@ -2,9 +2,8 @@ import 'package:flutter/material.dart';
 import '../animalItem.dart';
 
 class FirstApp extends StatelessWidget {
-  final List<Animal>? list;
-  const FirstApp({super.key, this.list});
-
+  final List<Animal> list;
+  FirstApp({Key? key, required this.list}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -17,18 +16,18 @@ class FirstApp extends StatelessWidget {
                 child: Row(
                   children: <Widget>[
                     Image.asset(
-                      list![position].imagePath!,
+                      list[position].imagePath!,
                       height: 100, width: 100,
                       fit: BoxFit.contain,
                     ),
-                    Text(list![position].animalName!)
+                    Text(list[position].animalName!)
                   ],
                 ),
               ),
               onTap: (){
                 AlertDialog dialog = AlertDialog(
                   content: Text(
-                    '이 동물은 ${list![position].kind}입니다.',
+                    '이 동물은 ${list[position].kind}입니다.',
                         style: TextStyle(fontSize: 20),
                   )
                 );
@@ -36,7 +35,7 @@ class FirstApp extends StatelessWidget {
               },
             );
           },
-            itemCount: list!.length,
+            itemCount: list.length,
           ),
         ),
       ),
