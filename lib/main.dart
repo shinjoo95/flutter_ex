@@ -54,6 +54,7 @@ class _HttpApp extends State<HttpApp> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
+        backgroundColor: Colors.grey,
         title: TextField(
           controller: _editingController,
           style: TextStyle(color: Colors.white),
@@ -64,7 +65,7 @@ class _HttpApp extends State<HttpApp> {
       body: Container(
         child: Center(
           child: data!.length == 0
-              ? Text('데이터 내려받기 클릭', style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)
+              ? Text('검색해주세용', style: TextStyle(fontSize: 20), textAlign: TextAlign.center,)
           :ListView.builder(itemBuilder: (context, index){
             return Card(
               child: Container(
@@ -100,11 +101,12 @@ class _HttpApp extends State<HttpApp> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.grey,
         onPressed: () {
           page = 1;
           data!.clear();
           getJSONData();
-        }, child: Icon(Icons.file_download),
+        }, child:  Icon(Icons.file_download, ),
       ),
     );
   }
