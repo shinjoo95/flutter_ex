@@ -22,7 +22,7 @@ class _IntroPageState extends State<IntroPage> {
   }
 
   Future<Timer> loadData() async{
-    return Timer(Duration(seconds: 5), onDoneLoading);
+    return Timer(Duration(seconds: 2), onDoneLoading);
   }
   onDoneLoading() async{
     Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => AnimationApp()));

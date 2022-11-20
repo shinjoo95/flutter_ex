@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'people.dart';
 import 'secondPage.dart';
 import 'intro.dart';
+import 'sliverPage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -140,6 +141,9 @@ class _AnimationAppState extends State<AnimationApp> {
                       ),
                   ),
               ),
+              ElevatedButton(onPressed: (){
+                Navigator.of(context).push(MaterialPageRoute(builder: (context)=> SliverPage()));
+              }, child: Text('페이지 이동'))
             ],
           ),
         ),
