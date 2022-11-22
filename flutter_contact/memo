@@ -1,0 +1,244 @@
+* Lint 끄는 방법
+-> analysis_options.yaml
+rules :
+  prefer_typing_uninitialized_variables: false
+  prefer_const_constructors_in_immutables: false
+  prefer_const_constructors: false
+  avoid_print: false
+  prefer_const_literals_to_create_immutables: false
+
+* 스타일 적용 방법
+- ThemeData()
+    - 특징 : 위젝은 나랑 가까운 스타일을 가장 먼저 적용
+    - 복잡한 위젝은 복잡한위젯Theme()안에서 스타일 줘야 됨
+- ThemeData() 안의 버튼 스타일은 ?
+    - textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+            backgroundColor : Colors.grey;
+        )
+    )
+- 레이아웃 중간에 ThemeData() 생성가능
+      body: Theme(
+          data: ThemeData(
+            textTheme:
+          ),
+          child: Container()
+- 원하는 ThemeData 안의 내용 불러오기
+    - style : Theme.of(context).textTheme.bodyText2,)
+        - ThemeData()찾아서 거기있던 textTheme > bodyText2 가져와달라는 뜻
+
+* Text() 위젯 스타일을 결정하고 싶다면?
+- Text()는 bodyText2 가져다 쓰고
+- ListTile()은 subtitle1 가져다 쓰고
+- TextButton()은 button 가져다 쓰고
+- AppBar()는 headline6 가져다 씀
+
+* import 하는 법
+- 파일 만든 뒤 import
+- import할 때 변수 중복 문제 피하기
+    - 경로 뒤에 as 작명 한 뒤 변수명에 작명.변수명으로 중복 피할 수 있음
+    - 변수를 다른파일에서 쓰기 싫으면 _변수명 _함수명 _클래스명
+
+* tab 기능 만들기
+- 동적인 UI만드는 법
+    1. state에 tab의 현재상태 저장
+    2. state에 따라 tab이 어떻게 보일지 작성
+    3. 유저가 쉽게 state 조작할 수 있게 만들기
+- onTap(){} : onPressed 랑 같은 기능 함
+- pageView() : 슬라이드 되는 UI 기능들을 적용할 수 있음
+
+* 서버에서 데이터가져오는 법
+- 서버에서 GET요청하면 됨
+- 서버란 ? 데이터 달라고 요청하면 주는 프로그램
+- method는 GET/ POST 택 1
+    - GET : 데이터를 읽고 싶을 때 / POST : 데이터를 보내고 싶을 때
+- GET요청하고 싶으면 패키지 설치 필요
+     - dependencies:
+      flutter:
+        sdk: flutter
+      http: ^0.13.4
+
+    - 인터넷 사용 허락
+    경로 : android/app/src/main/AndroidManifest.xml
+    <uses-permission android:name="android.permission.INTERNET"/>
+
+    - 마지막으로 import
+    import 'package:http/http.dart' as http;
+    import 'dart:convert';
+
+    - get 요청 코드
+    http.get(Uri.parse('url'));
+    - Dio라는 패키지 설치하면 GET요청 이런게 더 짧아짐
+
+
+* init state : MyApp위젯이 로드될 때 실행됨
+
+* JSON -> LIST, Map 자료형으로 변환
+    - jsonDeconde
+
+* Map 자료형 : 여러 자료를 한 변수에 저장하고 싶으면 사용 , 자료의 이름을 붙혀서 만들어야 됨
+    - {'이름1': 자료1, '이름2': 자료2 ...}
+    - Map에서 자료 꺼내려면 map['이름1']
+    - Map안에 문자뿐만 아니라 아무거나 다 넣을 수 있음
+
+* 스크롤관련 유용한 함수들 사용
+- import 'package:flutter/rendering.dart';
+- 스크롤바 높이 측정하려면
+    -  우선 ListView 담은 곳이 StatefulWidget 이어야 됨
+-  controller: scroll
+    - 얼마나 스크롤했는지 정보들이 scroll 변수에 저장됨
+- 스크롤바 높이 측정하려면
+  var scroll = ScrollController();
+  @override
+  void initState() {
+    super.initState();
+    scroll.addListener(() {         //왼쪽에 있는 변수가 변할 때마다 코드 실행해줌
+        print(scroll.position.pixels);  //위에서 부터 얼마나 스크롤 했는 지 보여줌
+       // scroll.position.maxScrollExtent : 최대 스크롤 거리
+    });
+  }
+
+* Navigator
+- 새로운 페이지로 덮기
+- Navigator.push(context, route)
+    - context : MaterialApp들어있는 context 넣어야함
+            onPressed: (){
+              Navigator.push(context,
+                MaterialPageRoute(builder: (c){return Text('새페이지');}));
+          },),
+          - 중괄호랑 return 키워드 1개씩이면 생략 가능 arrowfunction
+            - MaterialPageRoute(builder: (c) => Text('새페이지'))
+
+* routes
+- 페이지가 많으면 routes 사용하는 것이 좋음
+- 페이지 많고 복잡한 앱에 좋음
+- initialRoute: '/',                    //앱 로드 시 어떤 routes 보여줄 지
+  routes : {
+    '/' : (c) => Text('첫페이지'),        //  / 접속 시 보여줄 페이지
+    '/detail' : (c) => Text('둘째페이지')
+  }
+    - Navigator.pushNamed(context, '/detail');
+        - (/detail 페이지로 이동함)
+
+* 핸드폰 이미지를 넣고 싶을 때
+- image_picker 설치
+- ios/runner/info.plist
+<key>NSPhotoLibraryUsageDescription</key>
+<string>사진첩좀 써도 됩니까</string>
+<key>NSCameraUsageDescription</key>
+<string>카메라좀 써도 됩니까</string>
+<key>NSMicrophoneUsageDescription</key>
+<string>마이크 권한좀 제발</string>
+- dart 파일에 import 추가
+    - import 'package:image_picker/image_picker.dart';
+      import 'dart:io';
+-           onPressed: () async{
+                var picker = ImagePicker();
+                var image = await picker.pickImage(source: ImageSource.gallery);    //gallery, camera, video
+
+* 데이터 보관
+1. 서버로 보내서 DB에 저장
+2. 폰 메모리카드에 저장(반영구적 보관) - shared preferences 이용(이미지는 저장 불가)
+    - shared_preferences 설치
+        import 'package:shared_preferences/shared_preferences.dart';
+          shared_preferences: ^2.0.11
+
+            saveData() async{
+              var storage = await SharedPreferences.getInstance();
+              storage.setString('이름', '데이터');
+            }
+     - Map 자료 저장하려면 JSON으로 바꿔서 저장해야됨
+         - var map = {'age' : 20};
+            storage.setString('map', jsonEncode(map));
+            var result = storage.get('map');
+            print(jsonDecode(result));          //JSON -> Map 변환
+
+* 이름 클릭 시 위젯 띄우기
+                  GestureDetector(child: Text(widget.data[i]['user']),
+                      onTap: (){
+                        Navigator.push(context,
+                        MaterialPageRoute(builder: (c) => Scaffold())
+                        );
+                      },
+                  ),
+* 페이지 전환 커스텀 애니메이션
+1. 쉬운 방법
+    - CupertinoPageRoute(builder: (c) => Profile())
+2. 다른 방법
+-                         PageRouteBuilder(pageBuilder : (c, a1, a2) => Profile(),
+                          transitionsBuilder: (c, a1, a2, child) =>
+                          //c - context, a1 - animiation Object, 페이지 전환 얼마나 되었는지 0~1로 알려줌, 페이지 시작0 끝 1,
+                          //a2 - 기존 페이지 애니메이션
+                          trainsitionDuration: Duration(milliseconds : 500), // 페이지 속도 조절
+                            FadeTransition(opacity: a1, child: child,))
+
+- 슬라이드 만들기
+                    Navigator.push(context,
+                        PageRouteBuilder(pageBuilder : (c, a1, a2) => Profile(),
+                        transitionsBuilder: (c, a1, a2, child) =>
+                          SlideTransition(position: Tween(
+                            begin: Offset(-1.0, 0.0),       //시작 좌표     (x축, y축)
+                            end: Offset(0.0, 0.0),          //끝 좌표
+                          ).animate(a1),
+                            child: child,
+                          )
+                        )
+                        );
+                      },
+                  ),
+- 페이지 전환시 쓰는 Hero()이런 것도 있음
+
+* state 보관함 Provider 이용 (모든 위젯이 사용 가능)
+- import 'package:provider/provider.dart';
+      provider: ^6.0.1
+1. state 보관함 (store) 만들기
+2. store 원하는 위젯에 등록하기
+    - 이 state 쓰고 싶은 위젯들을 전부 ChangeNotifierProvide()로 감싸야함
+    void main() {
+      runApp(ChangeNotifierProvider(
+        create: (c) => Store1(),
+        child: MaterialApp()}
+    - 이제 MaterialApp() 자식 위젯들은 전부 Store1에 있던 state 사용가능함
+3. store에 있던 state 사용은
+    - appBar: AppBar(title: Text(context.watch<Store1>().name)
+4. store 에 있는 state 변경은 ?
+    1. state는 변경함수 만들기
+    2.   changeName(){
+           name = 'jooBong';
+           notifyListeners();           //setState 역할을 해줌 -> 재렌더링
+         }
+    3.           ElevatedButton(onPressed: (){
+                   context.read<Store1>().changeName();
+                 }, child: Text('버튼'))
+- store 만들고 -> store 쓸 위젯들 등록 -> store에 있던 거 쓸 때는 context.watch<Store이름>()
+- store 여러개 가능
+    - void main() {
+        runApp(MultiProvider(
+            providers:[
+              ChangeNotifierProvider(create: (c) => Store1() ),
+              ChangeNotifierProvider(create: (c) => Store2() ),
+            ],
+
+* 그리드(Grid) 격자구조 만들기
+- GridView(),
+
+* 스크롤바를 생성해주는 CustomScrollView()
+- sliver(조각) : 안에
+    - 격자 넣고 싶으면 SliverGrid()
+    - ListView 넣고 싶으면 SliverList()
+    - 박스 넣고 싶으면 SliverToBoxAdapter()
+    - 이쁜 헤더는 SliverAppBar()
+
+
+* 반응형 웹
+- MediaQuery.of(context).size.width;            //유저 기기의 화면정보 알려줌
+    - 1cm == 38LP
+- .padding.top      //상단 여백
+- .devicePicelRatio //해상도 1LP에 몇 px이 들어가는지
+- .textScaleFactor  //폰트사이즈 얼마나 키우고 쓰는지
+
+
+
+
+
+

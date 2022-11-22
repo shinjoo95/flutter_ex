@@ -1,0 +1,120 @@
+ 서버를 대신 만들어주는 Firebase 서비스
+ex) 회원로그인 기능, 데이터베이스 입출력 기능, 사진 업로드 기능,,,,
+- 데이터베이스 읽기 요청 일일 5만회 무료
+- Storage 하드디스크 5GB까지 무료
+
+firebase_core: ^1.10.6
+firebase_auth: ^3.3.4
+cloud_firestore: ^3.1.5
+
+App ID 바꾸는 법
+- Terminal
+admin@adminui-MacBookPro instagram % dart pub global activate rename
+admin@adminui-MacBookPro instagram % dart pub global run rename --bundleId com.shinjoo.instagram
+
+flutter 앱에 firebase 셋팅
+admin@adminui-MacBookPro instagram % dart pub global activate flutterfire_cli
+환경 변수 등록
+
+flutterfire configure
+--> error
+    --->>  node.js lts 다운로드후 -> sudo npm install -g firebase-tools --> firebase login --> flutterfire configure
+
+import 'package:firebase_core/firebase_core.dart';
+import 'firebase_options.dart';
+
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+
+minSdkVersion 높이기
+android/app/build.gradle 수정
+    defaultConfig {
+        // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
+        applicationId "com.shinjoo.instagram"
+        // You can update the following values to match your application needs.
+        // For more information, see: https://docs.flutter.dev/deployment/android#reviewing-the-build-configuration.
+        minSdkVersion 21    <---- 변경
+
+
+firebase 안에 database 2개가 있음
+- Realtime Database
+- Cloude Firestore
+    - SQL 안씀 , Map{} 자료형 그대로 저장 가능
+    - collection / document 개념
+    - collection : 폴더
+- import 'package:cloud_firestore/cloud_firestore.dart';
+-     getData() async{
+      await firestore.collection('product').doc(
+          'IzYiB5BlRJrGOkYKZfCU').get();
+      }
+- permission 에러
+    - 규칙 -->  allow read, write: if true;
+- 데이터 저장은 .add({'name' : '신발' ,'price' : 130000});
+- 데이터를 조건부초 가져오려면 .where()
+    - 가격이 70000원 이하인것만 가져와라, 날짜가 12일 이후만 가져와라
+- 데이터를 삭제하려면 doc.delete()
+- 데이터 수정 doc().update()
+
+
+로그인기능 구현하기 authentication
+- Firebase Authentication 셋팅
+    - import 'package:firebase_auth/firebase_auth.dart';
+      final auth = FirebaseAuth.instance;
+
+- 아이디 비번 만들기
+ -  getData() async{
+      try{
+        var result = await auth.createUserWithEmailAndPassword(
+            email: 'shinjoo95@naver.com',
+            password: 'wndydtlswndyd1'
+        );
+        result.user!.updateDisplayName('jooyoung');
+      }catch(e){
+        print(e);   //가입 거절 에러 메시지
+      }
+    }
+- 유저 로그인 기능
+    -    getData() async {
+           try {
+             await auth.signInWithEmailAndPassword(
+                 email: 'shinjoo@naver.com', password: '123123');
+           } catch (e) {
+             print(e);
+           }
+           if(auth.currentUser?.uid == null) {
+             print('로그인 안된 상태입니다.');
+           }else{
+             print('로그인 된 상태입니다.');
+           }
+         }
+- 로그아웃 기능
+    - await auth.signOut();
+- 이메일 인증, 폰 번호 인증 요구 가능 인
+- http://firebase.flutter.dev 참고
+
+Firestore 규칙란에서 데이터 입출력 규칙 설정 가능
+- firebase.google.com/docs/rules/basics 참고
+    -     match 경로 {
+          	조건
+          }
+          - 규칙을 정할 collection / document 경로
+
+   -    match /product/{docid} {        //product안의 모든 문서
+        	allow read : if request.auth != null;        //읽기 규칙 설정할 땐 allow read : if 조건식;  / / 생성규칙 설정 allow create : if 조건식;
+            //로그인 된 사람만 read 가능하게
+        }
+
+    - 로그인 한 사람만 읽기, 게시한 사람만 업데이트 가능, 데이터 validation 기능
+        -rules_version = '2';
+         service cloud.firestore {
+           match /databases/{database}/documents {
+             match /product/{docid} {
+             	allow read : if request.auth != null;
+               allow update : if request.auth.uid == resource.data.who;
+               allow create : if request.resource.data.name.match;
+            		 }
+             }
+           }

@@ -1,0 +1,46 @@
+{
+  "project_info": {
+    "project_number": "564279025477",
+    "project_id": "fluttergram-225ca",
+    "storage_bucket": "fluttergram-225ca.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:564279025477:android:0c6a6fc655a389de68282c",
+        "android_client_info": {
+          "package_name": "com.shinjoo.instagram"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "564279025477-ssr5udo8qnkre9v7lk1gptcgcvghchkj.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBSpX2MDokUQUSL27pirxjmkD6I2s1BJZw"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "564279025477-ssr5udo8qnkre9v7lk1gptcgcvghchkj.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "564279025477-4uafnusduk9t49eluj3c6van4dindf1b.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.shinjoo.instagram"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
