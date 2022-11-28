@@ -2,15 +2,5 @@
 
 카카오 키를 이용하여 책 정보 불러오기
 
-## Getting Started
 
-This project is a starting point for a Flutter application.
-
-A few resources to get you started if this is your first Flutter project:
-
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
-
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+![Simulator Screen Recording - iPhone 14 Pro - 2022-11-28 at 21 50 16](https://user-images.githubusercontent.com/102011608/204282259-41e90378-6b3a-4786-b0b1-e9ee1a1fceb1.gif)
